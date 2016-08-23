@@ -22,7 +22,7 @@ public class LabWork1 {
 		//определ€ем €вл€етс€ ли 41 член последовательности простым числом
 		fibArray = fibonacciNumbers(41);
 		System.out.println("41 член последовательности ‘ибоначчи: " + fibArray[40] +
-				(isSimpleNumber(fibArray[40]) ? " €вл€етс€ " : " не €вл€етс€ ") + 
+				(Utility.isSimpleNumber(fibArray[40]) ? " €вл€етс€ " : " не €вл€етс€ ") + 
 				"простым числом");
 		
 		//определ€ем пор€дковый номер числа 1836311903 в последовательности ‘ибоначчи		
@@ -57,30 +57,5 @@ public class LabWork1 {
 		
 		return fibArray;
 	}
-	
-	
-	/**
-	 * ќпредел€ет простое число или нет
-	 * @param num число дл€ проверки
-	 * @return истина - если число простое
-	 */
-	public static boolean isSimpleNumber(long num) {
-
-		long delCount = 0; //количество делителей
-		//идем по всем делител€м введенного числа
-		for(long i = 1; i <= num; i++) {
-			//если число делитс€ без остатка, то увеличиваем счетчик на 1
-			if(num%i == 0) {
-				delCount++;
-			}
-		}
-		//если делителей не больше 2, т.е. 1 и введенное число, то число простое
-		if(delCount <= 2) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-	
+		
 }

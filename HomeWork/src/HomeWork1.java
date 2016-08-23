@@ -81,28 +81,7 @@ public class HomeWork1 {
 
 	}
 
-	/*
-	 * Метод определяет простое число или нет
-	 */
 
-	public static boolean isSimpleNumber(long num) {
-
-		long delCount = 0; //количество делителей
-		//идем по всем делителям введенного числа
-		for(long i = 1; i <= num; i++) {
-			//если число делится без остатка, то увеличиваем счетчик на 1
-			if(num%i == 0) {
-				delCount++;
-			}
-		}
-		//если делителей не больше 2, т.е. 1 и введенное число, то число простое
-		if(delCount <= 2) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
 
 	/*
 	 * Выводит все простые числа в диапазоне от 1 до maxnumber
@@ -110,7 +89,7 @@ public class HomeWork1 {
 
 	public static void printSimpleNumbers(long maxnumber) {
 		for(int i = 1; i <= maxnumber; i++) {
-			if(isSimpleNumber(i)) {
+			if(Utility.isSimpleNumber(i)) {
 				System.out.print(i + " ");
 			}
 		}
