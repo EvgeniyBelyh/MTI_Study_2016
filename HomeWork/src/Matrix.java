@@ -200,38 +200,43 @@ public class Matrix {
 	
 	/**
 	 * Пытаемся расчитать определитель матрицы по алгоритму Гаусса
+	 * @return число - определитель матрицы 
 	 */
 	public double determinant() {
-		double[][] A = this.matrixArray;
-        int n = A.length;
-        double D = 1.0;                 // определитель
-        double B[][] = new double[n][n];  // рабочая матрица
+
+        double determ = 1.0;
+        double cloneMatrixArray[][] = new double[n][n];
         int row[] = new int[n];
         int hold, I_pivot;
         double pivot;
         double abs_pivot;
-
-        if (A[0].length != n) {
-            System.out.println("Error in Matrix.determinant, inconsistent array sizes.");
+        
+        //проверяем, что матрица квадратная
+        if (m != n) {
+            System.out.println("Ошибка! Матрица не квадратная");
         }
-        // создаем рабочую матрицу
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                B[i][j] = A[i][j];
+        
+        // создаем копию текущего массива элементов
+        for (int i = 0; i < n; i++) {
+            for (int ii = 0; ii < n; ii++) {
+            	cloneMatrixArray[i][ii] = this.matrixArray[i][ii];
+            }
+        }
         // заполняем вектор перестановок
-        for (int k = 0; k < n; k++) {
-            row[k] = k;
+        for (int i = 0; i < n; i++) {
+            row[i] = i;
         }
+        
         // начало основного цикла
         for (int k = 0; k < n - 1; k++) {
             // находим наиболший элемент для основы
-            pivot = B[row[k]][k];
+            pivot = cloneMatrixArray[row[k]][k];
             abs_pivot = Math.abs(pivot);
             I_pivot = k;
             for (int i = k; i < n; i++) {
-                if (Math.abs(B[row[i]][k]) > abs_pivot) {
+                if (Math.abs(cloneMatrixArray[row[i]][k]) > abs_pivot) {
                     I_pivot = i;
-                    pivot = B[row[i]][k];
+                    pivot = cloneMatrixArray[row[i]][k];
                     abs_pivot = Math.abs(pivot);
                 }
             }
@@ -240,22 +245,23 @@ public class Matrix {
                 hold = row[k];
                 row[k] = row[I_pivot];
                 row[I_pivot] = hold;
-                D = -D;
+                determ = -determ;
             }
-            // проверка на ноль
+            // проверка на ноль на главной диагонали
             if (abs_pivot < 1.0E-10) {
                 return 0.0;
             } else {
-                D = D * pivot;
+            	//умножаем промежуточное значение определителя на значение элемента главной диагонали
+            	determ = determ * pivot;
                 // делим на основу
                 for (int j = k + 1; j < n; j++) {
-                    B[row[k]][j] = B[row[k]][j] / B[row[k]][k];
+                	cloneMatrixArray[row[k]][j] = cloneMatrixArray[row[k]][j] / cloneMatrixArray[row[k]][k];
                 }
                 //  внутренний цикл
                 for (int i = 0; i < n; i++) {
                     if (i != k) {
                         for (int j = k + 1; j < n; j++) {
-                            B[row[i]][j] = B[row[i]][j] - B[row[i]][k] * B[row[k]][j];
+                        	cloneMatrixArray[row[i]][j] = cloneMatrixArray[row[i]][j] - cloneMatrixArray[row[i]][k] * cloneMatrixArray[row[k]][j];
                         }
                     }
                 }
@@ -263,7 +269,7 @@ public class Matrix {
             // конец внутреннего цикла
         }
         // конец главного цикла
-        return D * B[row[n - 1]][n - 1];
+        return determ * cloneMatrixArray[row[n - 1]][n - 1];
 					
 	}
 	
