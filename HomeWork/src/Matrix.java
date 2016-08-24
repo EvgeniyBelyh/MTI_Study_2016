@@ -199,7 +199,7 @@ public class Matrix {
 	}
 	
 	/**
-	 * Пытаемся расчитать определитель матрицы по алгоритму Гаусса
+	 * Пытаемся рассчитать определитель матрицы по алгоритму Гаусса
 	 * @return число - определитель матрицы 
 	 */
 	public double determinant() {
@@ -214,6 +214,7 @@ public class Matrix {
         //проверяем, что матрица квадратная
         if (m != n) {
             System.out.println("Ошибка! Матрица не квадратная");
+            return 0.0;
         }
         
         // создаем копию текущего массива элементов
@@ -273,4 +274,30 @@ public class Matrix {
 					
 	}
 	
+	/**
+	 * Инвертирует текущую матрицу
+	 */
+	public void selfInvert() {
+		//бежим по всем элементам текущей матрицы и меняем знак элемента на противоположный
+		for(int i = 0; i < m; i++) {
+			for(int ii = 0; ii < n; ii++){
+				matrixArray[i][ii] = -matrixArray[i][ii];
+			}
+		}
+    }
+	
+	/**
+	 * Инвертирует входную матрицу
+	 * @param matrix - матрица
+	 */
+	public static void invertMatrix(Matrix matrix) {
+		//берем массив элементов входной матрицы
+		double[][] array = matrix.getMatrixArray();
+		//бежим по всем элементам массива и меняем знак элемента на противоположный
+		for(int i = 0; i < matrix.getM(); i++) {
+			for(int ii = 0; ii < matrix.getN(); ii++){
+				array[i][ii] = -array[i][ii];
+			}
+		}
+	}
 }
