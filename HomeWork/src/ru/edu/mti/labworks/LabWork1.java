@@ -1,3 +1,6 @@
+package ru.edu.mti.labworks;
+import ru.edu.mti.util.Utility;
+
 /**
  * Лабораторная работа №1
  * @author Белых Евгений

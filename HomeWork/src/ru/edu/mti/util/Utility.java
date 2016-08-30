@@ -1,3 +1,4 @@
+package ru.edu.mti.util;
 /**
  * Класс утилит
  * @author Белых Евгений

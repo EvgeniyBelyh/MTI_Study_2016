@@ -1,3 +1,4 @@
+package ru.edu.mti.labworks;
 import java.io.*;
 import java.text.DateFormat;
 import java.util.Date;
@@ -11,12 +12,11 @@ public class Logger extends Thread {
 	
 	private LoggerStatus status; //перечисление статусов потока
 	private String message; //сообщение
-	public static final Long startTime = System.currentTimeMillis(); //время запуска потока
+	private static final Long startTime = System.currentTimeMillis(); //время запуска потока
 	private File file = new File("logger.txt"); //файл лога
 	
 	public Logger() {
-		this.status = LoggerStatus.INFO;
-		this.message = "Default message";
+		this(null, LoggerStatus.INFO, "Default message");
 	}
 	
 	public Logger(String name, LoggerStatus status, String message) {
@@ -25,7 +25,9 @@ public class Logger extends Thread {
 		this.message = message;
 	}
 	
-	public synchronized void run(){
+	public void run(){
+		//пишем в консоль о начале работы потока
+		System.out.println("Поток " + this.getName() + " начал свою работу");
 		//засекаем минуту
 		while((System.currentTimeMillis() - Logger.startTime) < 60000) {
 			//пишем в файл сообщение
@@ -37,6 +39,8 @@ public class Logger extends Thread {
 				e.printStackTrace();
 			}
 		}
+		//пишем в консоль о завершении работы потока
+		System.out.println("Поток " + this.getName() + " закончил свою работу");
 	}
 	
 	/**

@@ -1,3 +1,4 @@
+package ru.edu.mti.labworks;
 /**
  * Перечисление статусов логгера
  * @author Белых Евгений

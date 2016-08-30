@@ -1,3 +1,4 @@
+package ru.edu.mti.homeworks;
 /**
  * Класс для тестов матриц
  * @author Белых Евгений
@@ -33,16 +34,6 @@ public class TestMatrix {
 		resultMatrix.printMatrixArray();
 		resultMatrix = null;
 		
-		//инвертирование матриц
-		System.out.println("----------------------------------------------------------");
-		System.out.println("Тест инвертирования матриц");
-		System.out.println("Инвертирование текущей матрицы");
-		matrix1.selfInvert();
-		matrix1.printMatrixArray();
-		System.out.println("Инвертирование входной матрицы");
-		Matrix.invertMatrix(matrix1);
-		matrix1.printMatrixArray();
-		
 		//возврат единичной матрицы
 		System.out.println("----------------------------------------------------------");
 		System.out.println("Возврат единичной матрицы 4 порядка");
@@ -73,6 +64,36 @@ public class TestMatrix {
 		System.out.println("----------------------------------------------------------");
 		System.out.println("Тест расчета определителя");
 		System.out.println("Определитель первой матрицы равен " + matrix1.determinant());
+		
+		//тест определения ранга матрицы
+		System.out.println("----------------------------------------------------------");
+		System.out.println("Тест определения ранга матрицы");
+		System.out.println("Ранг первой матрицы равен " + matrix1.rang());
+
+		//тест расчета обратной матрицы
+		System.out.println("----------------------------------------------------------");
+		System.out.println("Тест расчета обратной матрицы");
+		matrix1.printMatrixArray();
+
+		System.out.println("\nОбратная матрица");
+		
+		Matrix matrix3 = matrix1.inverse();
+		matrix3.printMatrixArray();
+		
+		System.out.println("\nУмножаем обратную матрицу на исходную");
+		resultMatrix = new Matrix(matrix1.matrixMultiplication(matrix3).getMatrixArray());
+		resultMatrix.printMatrixArray();
+	
+		//инвертирование матриц
+		System.out.println("----------------------------------------------------------");
+		System.out.println("Тест инвертирования матриц");
+		System.out.println("Инвертирование текущей матрицы");
+		matrix1.selfInvert();
+		matrix1.printMatrixArray();
+		System.out.println("Инвертирование входной матрицы");
+		Matrix.invertMatrix(matrix1);
+		matrix1.printMatrixArray();
+		
 	}
 
 }

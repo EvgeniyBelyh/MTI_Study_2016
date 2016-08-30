@@ -1,3 +1,4 @@
+package ru.edu.mti.homeworks;
 /**
  * Класс Матрица
  * @author Белых Евгений
@@ -8,6 +9,7 @@ public class Matrix {
 	private int m = 3, n = 3; //размерности матрицы
 	private double[][] matrixArray; //массив для хранения значений
 	public static Matrix identityMatrix = Matrix.getIdentityMatrix(3); //единичная матрица
+	private int rang;
 	
 	//конструктор по умолчанию
 	public Matrix() {
@@ -199,91 +201,12 @@ public class Matrix {
 	}
 	
 	/**
-	 * Пытаемся рассчитать определитель матрицы по алгоритму Гаусса
-	 * @return число - определитель матрицы 
-	 */
-	public double determinant() {
-
-        double determ = 1.0;
-        double cloneMatrixArray[][] = new double[n][n];
-        int row[] = new int[n];
-        int hold, I_pivot;
-        double pivot;
-        double abs_pivot;
-        
-        //проверяем, что матрица квадратная
-        if (m != n) {
-            System.out.println("Ошибка! Матрица не квадратная");
-            return 0.0;
-        }
-        
-        // создаем копию текущего массива элементов
-        for (int i = 0; i < n; i++) {
-            for (int ii = 0; ii < n; ii++) {
-            	cloneMatrixArray[i][ii] = this.matrixArray[i][ii];
-            }
-        }
-        // заполняем вектор перестановок
-        for (int i = 0; i < n; i++) {
-            row[i] = i;
-        }
-        
-        // начало основного цикла
-        for (int k = 0; k < n - 1; k++) {
-            // находим наиболший элемент для основы
-            pivot = cloneMatrixArray[row[k]][k];
-            abs_pivot = Math.abs(pivot);
-            I_pivot = k;
-            for (int i = k; i < n; i++) {
-                if (Math.abs(cloneMatrixArray[row[i]][k]) > abs_pivot) {
-                    I_pivot = i;
-                    pivot = cloneMatrixArray[row[i]][k];
-                    abs_pivot = Math.abs(pivot);
-                }
-            }
-            // если нашлась такая основа, то меняем знак определителя и меняем местами столбцы
-            if (I_pivot != k) {
-                hold = row[k];
-                row[k] = row[I_pivot];
-                row[I_pivot] = hold;
-                determ = -determ;
-            }
-            // проверка на ноль на главной диагонали
-            if (abs_pivot < 1.0E-10) {
-                return 0.0;
-            } else {
-            	//умножаем промежуточное значение определителя на значение элемента главной диагонали
-            	determ = determ * pivot;
-                // делим на основу
-                for (int j = k + 1; j < n; j++) {
-                	cloneMatrixArray[row[k]][j] = cloneMatrixArray[row[k]][j] / cloneMatrixArray[row[k]][k];
-                }
-                //  внутренний цикл
-                for (int i = 0; i < n; i++) {
-                    if (i != k) {
-                        for (int j = k + 1; j < n; j++) {
-                        	cloneMatrixArray[row[i]][j] = cloneMatrixArray[row[i]][j] - cloneMatrixArray[row[i]][k] * cloneMatrixArray[row[k]][j];
-                        }
-                    }
-                }
-            }
-            // конец внутреннего цикла
-        }
-        // конец главного цикла
-        return determ * cloneMatrixArray[row[n - 1]][n - 1];
-					
-	}
-	
-	/**
 	 * Инвертирует текущую матрицу
 	 */
 	public void selfInvert() {
-		//бежим по всем элементам текущей матрицы и меняем знак элемента на противоположный
-		for(int i = 0; i < m; i++) {
-			for(int ii = 0; ii < n; ii++){
-				matrixArray[i][ii] = -matrixArray[i][ii];
-			}
-		}
+		//запускаем метод инвертирования внешнеий матрицы с ссылкой на текущую
+		Matrix.invertMatrix(this);		
+		
     }
 	
 	/**
@@ -293,11 +216,232 @@ public class Matrix {
 	public static void invertMatrix(Matrix matrix) {
 		//берем массив элементов входной матрицы
 		double[][] array = matrix.getMatrixArray();
-		//бежим по всем элементам массива и меняем знак элемента на противоположный
+		//создаем массив для хранения результатов инвертирования
+		double[][] transArray = new double[matrix.getM()][matrix.getN()];
+		
+		//бежим по всем элементам массива и инвертируем матрицу
 		for(int i = 0; i < matrix.getM(); i++) {
 			for(int ii = 0; ii < matrix.getN(); ii++){
-				array[i][ii] = -array[i][ii];
+				transArray[ii][i] = array[i][ii];
 			}
 		}
+		//переносим инвертированный массив в массив входной матрицы
+		for(int i = 0; i < matrix.getM(); i++) {
+			for(int ii = 0; ii < matrix.getN(); ii++){
+				array[i][ii] = transArray[i][ii];
+			}
+		}	
 	}
+	
+	/**
+	 * Приводит матрицу к ступенчатому виду методом Гаусса
+	 * @return двумерный массив с элементами ступенчатой матрицы
+	 */
+	private double[][] transformMatrix() {
+		int i = 0, j = 0, k = 0, l = 0; //определяем индексы
+		double r; //максимальное значение элемента 
+		
+		//делаем копию текущего массива элементов
+		double array[][] = new double[m][n];		
+		for(int z = 0; z < m; z++) {
+			for(int zz = 0; zz < n; zz++){
+				array[z][zz] = this.matrixArray[z][zz];
+			}
+		}
+		    
+		while (i < m && j < n) {
+	        // ищем максимальный элемент в j-м столбце,
+	        // начиная с i-й строки
+	        r = 0.0;
+	        for (k = i; k < m; ++k) {
+	            if (Math.abs(array[k][j]) > r) {
+	                l = k;      // запомним номер строки
+	                r = Math.abs(array[k][j]); // и максимальный элемент
+	            }
+	        }
+
+	        if (l != i) {
+	            // меняем местами i-ю и l-ю строки
+	            for (k = j; k < n; ++k) {
+	                r = array[i][k];
+	                array[i][k] = array[l][k];
+	                array[l][k] = (-r); // Меняем знак строки
+	            }
+	        }
+
+	        // обнуляем j-й столбец, начиная со строки i+1,
+	        // применяя элем. преобразования второго рода
+	        for (k = i + 1; k < m; ++k) {
+	            r = (-array[k][j] / array[i][j]);
+
+	            // к k-й строке прибавляем i-ю, умноженную на r
+	            array[k][j] = 0.0;
+	            for (l = j+1; l < n; ++l) {
+	            	array[k][l] = array[k][l] + r * array[i][l];
+	            }
+	        }
+
+	        ++i; ++j;   // переходим к следующему минору
+	    }
+		
+		this.rang = i; //определяем ранг матрицы, как количество ненулевых строк
+		
+	    return array; // массив элементов, приведенный к ступенчатому виду
+	}
+
+	
+	/**
+	 * Рассчитывает определитель матрицы
+	 * @return число - определитель матрицы
+	 */
+	public double determinant() {
+		if(m != n) {
+			System.out.println("Ошибка! Матрица не квадратная. Рассчитать определитель невозможно");
+			return 0;
+		}
+		
+		//берем ступенчатую матрицу
+		double array[][] = this.transformMatrix();
+		//перемножаем элементы на главной диагонали
+		int ii = 0; 
+		double result = 1.0;
+		for(int i = 0; i < m; i++) {
+			result = result * array[i][ii];
+			ii++;
+		}
+		
+		return Math.round(result);
+		
+	}
+	
+	/**
+	 * Определяет ранг матрицы
+	 * @return число - ранг матрицы
+	 */
+	public int rang() {
+		//запускаем метод приведения матрицы к ступенчатому виду
+		//чтобы определить количество ненулевых строк
+		this.transformMatrix();
+		//возвращаем ранг матрицы
+		return this.rang;
+	}
+	
+	
+	/**
+	 * Рассчитывает обратную матрицу
+	 * @return объект Матрица
+	 */
+	public Matrix inverse()
+	{   		
+		/* Изначально результирующая матрица является единичной
+	       Заполняем единичную матрицу */
+		double[][] result = Matrix.getIdentityMatrix(m).getMatrixArray();
+	    
+	    //создаем копию массива элементов текущей матрицы
+	    double[][] copy = new double[m][n];    
+	    for(int z = 0; z < m; z++) {
+	    	for(int zz = 0; zz < n; zz++){
+	    		copy[z][zz] = this.matrixArray[z][zz];
+	    	}
+	    }
+	    
+	    /* Проходим по исходными строкам матрицы
+	       сверху вниз. На данном этапе происходит прямой ход
+	       и исходная матрица превращается в верхнюю треугольную */
+	    for (int k = 0; k < m; ++k)
+	    {
+	        /* Если элемент на главной диагонали в исходной
+	           строке - нуль, то ищем строку, где элемент
+	           того же столбца не нулевой, и меняем строки
+	           местами */
+	        if (Math.abs(copy[k][k]) < 1e-8)
+	        {           
+	            // Идём по строкам, расположенным ниже исходной
+	            for (int i = k + 1; i < m; ++i)
+	            {
+	                /* Если нашли строку, где в том же столбце
+	                   имеется ненулевой элемент */
+	                if (Math.abs(copy[i][k]) > 1e-8)
+	                {
+	                    /* Меняем найденную и исходную строки местами
+	                       как в исходной матрице, так и в единичной */
+	                    double[] swap1 = new double[n];
+	                	
+	                    for(int z = 0; z < n; z++) {
+	                    	swap1[z] = copy[k][z];
+	                    	copy[k][z] = copy[i][z];
+	                    	copy[i][z] = swap1[z];
+	                    	
+	                    	swap1[z] = result[k][z];
+	                    	result[k][z] = result[i][z];
+	                    	result[i][z] = swap1[z];
+	                    }
+
+	                    break;
+	                }
+	            }
+	        }
+	        
+	        // Запоминаем делитель - диагональный элемент
+	        double div = copy[k][k];
+	        
+	        /* Все элементы исходной строки делим на диагональный
+	           элемент как в исходной матрице, так и в единичной */
+	        for (int j = 0; j < m; ++j)
+	        {
+	            copy[k][j] = copy[k][j] / div;
+	            result[k][j] = result[k][j] / div;
+	        }
+	        
+	        // Идём по строкам, которые расположены ниже исходной
+	        for (int i = k + 1; i < m; ++i)
+	        {
+	            /* Запоминаем множитель - элемент очередной строки,
+	               расположенный под диагональным элементом исходной
+	               строки */
+	            double multi = copy[i][k];
+	            
+	            /* Отнимаем от очередной строки исходную, умноженную
+	               на сохранённый ранее множитель как в исходной,
+	               так и в единичной матрице */
+	            for (int j = 0; j < m; ++j)
+	            {
+	                copy[i][j]   = copy[i][j] - multi * copy[k][j];
+	                result[i][j] = result[i][j] - multi * result[k][j];
+	            }
+	        }
+	    }
+	    
+	    
+	    /* Проходим по вернхней треугольной матрице, полученной
+	       на прямом ходе, снизу вверх
+	       На данном этапе происходит обратный ход, и из исходной
+	       матрицы окончательно формируется единичная, а из единичной -
+	       обратная */
+	    for (int k = m - 1; k > 0; --k)
+	    {
+	        // Идём по строкам, которые расположены выше исходной
+	        for (int i = k - 1; i + 1 > 0; --i)
+	        {
+	            /* Запоминаем множитель - элемент очередной строки,
+	               расположенный над диагональным элементом исходной
+	               строки */
+	            double multi = copy[i][k];
+	            
+	            /* Отнимаем от очередной строки исходную, умноженную
+	               на сохранённый ранее множитель как в исходной,
+	               так и в единичной матрице */
+	            for (int j = 0; j < m; ++j)
+	            {
+	                copy[i][j]   = copy[i][j] - multi * copy[k][j];
+	                result[i][j] = result[i][j] - multi * result[k][j];
+	            }
+	        }
+	    }
+	    
+	    // возвращаем обратную матрицу
+	    return new Matrix(result);
+	}
+	
+	
 }

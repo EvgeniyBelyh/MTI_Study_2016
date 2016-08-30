@@ -1,6 +1,9 @@
+package ru.edu.mti.homeworks;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import ru.edu.mti.util.Utility;
 
 public class HomeWork1 {
 
