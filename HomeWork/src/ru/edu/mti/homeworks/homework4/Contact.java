@@ -15,7 +15,6 @@ public class Contact {
 	private boolean mobile; //true - если телефон сотовый, иначе городской
 	private MobileOperators operator; //оператор сотовой связи
 	private List<Contact> relatedContacts; //список связанных контактов
-<<<<<<< HEAD
 	private static final int RELATED_CONTACT_POOL_SIZE = 10; //количество связанных контактов
 	
 	//конструкторы
@@ -78,64 +77,8 @@ public class Contact {
 			//добавляем случайный контакт
 			this.relatedContacts.add(relatedContacts.get((int) (Math.round(Math.random() * (relatedContacts.size() - 1)))));
 		}
-
-=======
-	
-	//конструкторы
-	public Contact() {
-		//generateVariantContact();
 	}
 
-	public Contact(String name, String phone, boolean mobile, MobileOperators operator, List<Contact> relatedContacts) {
-		super();
-		this.name = name;
-		this.phone = phone;
-		this.mobile = mobile;
-		this.operator = operator;
-		this.relatedContacts = relatedContacts;
-	}
-	
-	//геттеры и сеттеры
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public boolean isMobile() {
-		return mobile;
-	}
-
-	public void setMobile(boolean mobile) {
-		this.mobile = mobile;
-	}
-
-	public MobileOperators getOperator() {
-		return operator;
-	}
-
-	public void setOperator(MobileOperators operator) {
-		this.operator = operator;
-	}
-
-	public List<Contact> getRelatedContacts() {
-		return relatedContacts;
-	}
-
-	public void setRelatedContacts(List<Contact> relatedContacts) {
-		this.relatedContacts = relatedContacts;
->>>>>>> refs/remotes/origin/master
-	}
 	
 	/**
 	 * генерирует случайный контакт с 10 случайными контактами в списке связанных контактов
@@ -173,4 +116,5 @@ public class Contact {
 	public String toString() {
 		return "Contact " + name + ", phone " + phone;
 	}
+	
 }

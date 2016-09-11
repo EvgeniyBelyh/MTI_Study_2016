@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Set;
@@ -20,6 +21,7 @@ public class Phonebook {
 	private List<Contact> contactsInList = new ArrayList<Contact>(); //контакты в коллекции List
 	private TreeSet<Contact> contactsInSet;  //контакты в множестве Set
 	private Map<String, Contact> contactsInMap = new HashMap<String, Contact>(); //контакты в карте записей Map	
+	private Map<ContactNumber, Contact> contactsInMapTestHash = new HashMap<ContactNumber, Contact>(); //контакты в карте записей Map	
 	private Contact[] contactsArray; //массив контактов
 	private String[] contactNames; //массив с именами контактов для обхода карты значений в обратном порядке
 	
@@ -91,16 +93,7 @@ public class Phonebook {
 		
 		//бежим по всем созданным контактам и заполняем списки связанных контактов
 		for(Contact contact2 : this.contactsInList) {
-			//собираем связанные контакты в коллекцию
-			list = new ArrayList<Contact>();
-			//собираем 10 контактов
-			for(int i = 0; i < 10; i++) {
-				//добавляем случайный контакт
-				list.add(contactsInList.get((int) (Math.round(Math.random() * (contactsInList.size() - 1)))));
-			}
-			//передаем собранный список связанных контактов в контакт
-			contact2.setRelatedContacts(list);
-			
+			contact2.setRelatedContacts(this.contactsInList);			
 		}
 		
 		System.out.println("Распределили связанные контакты");
@@ -118,6 +111,11 @@ public class Phonebook {
 		for(Contact contact3 : this.contactsInSet) {		
 			//заполняем карту значений заранее отсортированными значениями
 			this.contactsInMap.put(contact3.getName(), contact3);
+		}
+		
+		//заполняем HashMap для теста работы хэшкодов
+		for(int i = 0; i < this.contactsInList.size() - 1; i++) {
+			this.contactsInMapTestHash.put(new ContactNumber(i), this.contactsInList.get(i));
 		}
 		
 		//создаем массив нужного размера
@@ -140,16 +138,16 @@ public class Phonebook {
 		long counter = 0; //счетчик
 		
 		//идем по всем контактам в обратном порядке
-		for(int i = this.contactsInList.size() - 1; i >= 0; i--) {
+		for(ListIterator<Contact> iterator = this.contactsInList.listIterator(this.contactsInList.size() - 1); iterator.hasPrevious();) {
 			//определяем искомый контакт
-			searchContact = contactsInList.get(i);
+			searchContact = (Contact) iterator.previous();
 			//обнуляем счетчик
 			counter = 0;
 			
 			//выбираем списки связанных контактов каждого контакта в обратном порядке
-			for(int ii = this.contactsInList.size() - 1; ii >= 0; ii--) {
+			for(ListIterator<Contact> iterator2 = this.contactsInList.listIterator(this.contactsInList.size() - 1); iterator2.hasPrevious();) {
 				//если искомый контакт встречается в списках связанных контактов, то
-				if(contactsInList.get(ii).getRelatedContacts().contains(searchContact)) {
+				if(((Contact) iterator2.previous()).getRelatedContacts().contains(searchContact)) {				
 					//увеличиваем счетчик
 					counter++;
 				}
@@ -267,6 +265,45 @@ public class Phonebook {
 			
 			//выбираем списки связанных контактов каждого контакта
 			for(Map.Entry<String, Contact> entry2 : contactsInMap.entrySet()) {
+				//если искомый контакт встречается в списках связанных контактов, то
+				if(entry2.getValue().getRelatedContacts().contains(searchContact)) {
+					//увеличиваем счетчик
+					counter++;
+				}
+				
+				//если счетчик больше максимального количества повторений, присваиваем новые значения
+				if(counter > maxCount) {
+					maxCount = counter;
+					maxPhone = searchContact.getPhone();
+				}
+			}
+						
+		}
+		
+		return ("Телефон " + maxPhone + " встречается " + maxCount + " раз(а)");
+	}
+	
+	/**
+	 * обходит карту значений 
+	 * @return  возвращает количество повторений и номер телефона
+	 */
+	public String searchInMapTestHash() {
+		
+		Contact searchContact; //искомый контакт
+		String maxPhone = ""; //часто встречающийся номер телефона
+		long maxCount = 0; //количество повторений
+		long counter = 0; //счетчик
+		
+		//идем по всем контактам в обратном порядке
+		for(int i = this.contactNames.length - 1; i >= 0; i--) {
+			//определяем искомый контакт
+			searchContact = this.contactsInMapTestHash.get(new ContactNumber(i));
+			
+			//обнуляем счетчик
+			counter = 0;
+			
+			//выбираем списки связанных контактов каждого контакта
+			for(Map.Entry<ContactNumber, Contact> entry2 : this.contactsInMapTestHash.entrySet()) {
 				//если искомый контакт встречается в списках связанных контактов, то
 				if(entry2.getValue().getRelatedContacts().contains(searchContact)) {
 					//увеличиваем счетчик

@@ -12,11 +12,11 @@ import java.util.Set;
 public class TestPhonebook {
 
 	public static void main(String[] args) {
-		/* Заносим в телефонную книгу 100 000 контактов.
+		/* Заносим в телефонную книгу 50 000 контактов.
 		 * У каждого контакта 10 связанных контактов.
-		 * Итого для обхода 1 000 000 контактов.
+		 * Итого для обхода  500 000 контактов.
 		 */
-		Phonebook phonebook = new Phonebook(100000);
+		Phonebook phonebook = new Phonebook(50000);
 		//запускаем обход списка
 		System.out.println("\nЗапускаем обход списка");
 		//засекаем время
@@ -48,7 +48,14 @@ public class TestPhonebook {
 		//выводим результат обхода
 		System.out.println(phonebook.reverseSearchInMap());
 		System.out.println("Затраченное время: " + Math.round(((System.currentTimeMillis() - startTime) / 1000)) + " сек.");
-		
+
+		//запускаем обход карты значений
+		System.out.println("\nЗапускаем обход карты значений для теста хэшкода");
+		//засекаем время
+		startTime = System.currentTimeMillis();
+		//выводим результат обхода
+		System.out.println(phonebook.searchInMapTestHash());
+		System.out.println("Затраченное время: " + Math.round(((System.currentTimeMillis() - startTime) / 1000)) + " сек.");
 		
 		/*
 		 * ЗАДАНИЕ 2
