@@ -91,9 +91,22 @@ public class Phonebook {
 		
 		//бежим по всем созданным контактам и заполняем списки связанных контактов
 		for(Contact contact2 : this.contactsInList) {
+<<<<<<< HEAD
 			//передаем собранный список связанных контактов в контакт
 			contact2.setRelatedContacts(this.contactsInList);
 		
+=======
+			//собираем связанные контакты в коллекцию
+			list = new ArrayList<Contact>();
+			//собираем 10 контактов
+			for(int i = 0; i < 10; i++) {
+				//добавляем случайный контакт
+				list.add(contactsInList.get((int) (Math.round(Math.random() * (contactsInList.size() - 1)))));
+			}
+			//передаем собранный список связанных контактов в контакт
+			contact2.setRelatedContacts(list);
+			
+>>>>>>> refs/remotes/origin/master
 		}
 		
 		System.out.println("Распределили связанные контакты");

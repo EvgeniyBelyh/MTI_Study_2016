@@ -1,5 +1,6 @@
 package ru.edu.mti.homeworks.homework4;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,3 +29,8 @@ public enum MobileOperators {
 	} 
 } 
 
+=======
+public enum MobileOperators {
+	MTS, Beeline, MegaFon, Tele2;
+}
+>>>>>>> refs/remotes/origin/master
