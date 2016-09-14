@@ -1,4 +1,7 @@
 package ru.edu.mti.homeworks;
+
+import ru.edu.mti.homeworks.homework5.Quadratic;
+
 /**
  * Класс Матрица
  * @author Белых Евгений
@@ -18,6 +21,7 @@ public class Matrix {
 	}
 	
 	//конструктор с размерностями
+	@Quadratic
 	public Matrix(int m, int n) {
 		//ставим переданные значения полей
 		this.m = m;
@@ -93,7 +97,15 @@ public class Matrix {
 			System.out.println("");
 		}
 	}
-
+	
+	/**
+	 * Обертка метода печати для теста рефлексии
+	 */
+	private void printReflectionTest() {
+		printMatrixArray();
+	}
+	
+	
 	/**
 	 * Умножение матрицы на число
 	 * @param multi множитель
